@@ -3,6 +3,8 @@ import { Autocomplete } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
 import api from "../../services/api"
 import { ContainerCard, ContainerMain, FormTags, TagsContainer } from "./styles"
+import ModalButton from "../../components/modal"
+
 
 
 function Main() {
@@ -54,8 +56,9 @@ function Main() {
                         {item.name}
                         {item.description === null ? "Não tem descrição" : item.description}
                         {item.html_url}
+                        <ModalButton tags = {tags} repo_id = {item.id}/>
                         <TagsContainer>
-                            {tags.map((data)=> (
+                            {item.tags.map((data)=> (
                                 <button key={data.id}>{data.name}</button>
                             ))}
                         </TagsContainer>
