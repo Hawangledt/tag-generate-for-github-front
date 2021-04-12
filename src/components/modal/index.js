@@ -1,18 +1,27 @@
 import React, { useState } from "react"
-import { ListItemAvatar, Modal } from "@material-ui/core"
+import { Modal } from "@material-ui/core"
 import { ContainerModal } from "./styles"
 import api from "../../services/api"
+import { useTagsGitHub } from "../../hooks"
 
 function ModalButton({ tags, repo_id }) {
     const [visible, setVisible] = useState(false);
     const [tagID, setTagID] = useState(0);
+    const {count, setCount} = useTagsGitHub();
     async function linkTagToRepository() {
-        await api.post("/tags/add", {
-            repo_id, tag_id: tagID
-        })
-        setVisible(false)
+        try {
+            await api.post("/tags/add", {
+                repo_id, tag_id: tagID
+            })
+            setCount(count + 1)
+            setTagID(0)
+            setVisible(false)
+            
+        } catch (error) {
+            console.log(error.response.data.detail)
+        }
     }
-    console.log(tagID)
+    
     return (
         <div>
             <button onClick={() => setVisible(!visible)}>

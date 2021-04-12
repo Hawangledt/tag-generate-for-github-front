@@ -1,10 +1,13 @@
 import React from "react"
+import { TagsGitHubProvider } from "./hooks";
 import Routes from "./routes";
 
 
 function App() {
   return (
-    <><Routes/></>
+    <TagsGitHubProvider>
+      <Routes />
+    </TagsGitHubProvider>
   );
 }
 

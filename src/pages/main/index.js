@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../services/api"
 import { ContainerCard, ContainerMain, FormTags, TagsContainer } from "./styles"
 import ModalButton from "../../components/modal"
+import { useTagsGitHub } from "../../hooks";
 
 
 
@@ -11,7 +12,7 @@ function Main() {
     const [repos, setRepos] = useState([]);
     const [tags, setTags] = useState([]);
     const [newTag, setNewTag] = useState("");
-    const [count, setCount] = useState(0);
+    const {count, setCount} = useTagsGitHub();
     async function createNewTag() {
         try {
             await api.post("/tags/new", { name: newTag, auth_id: 1 })
