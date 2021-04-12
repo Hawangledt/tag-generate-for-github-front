@@ -58,6 +58,10 @@ export const TagsContainer = styled.div`
         };
         &:active{
             opacity: 1;
-        }       
+        }
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+               
     }
 `

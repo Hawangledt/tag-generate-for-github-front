@@ -5,17 +5,28 @@ import api from "../../services/api"
 import { ContainerCard, ContainerMain, FormTags, TagsContainer } from "./styles"
 import ModalButton from "../../components/modal"
 import { useTagsGitHub } from "../../hooks";
-
+import { Close } from "@material-ui/icons"
 
 
 function Main() {
     const [repos, setRepos] = useState([]);
     const [tags, setTags] = useState([]);
     const [newTag, setNewTag] = useState("");
-    const {count, setCount} = useTagsGitHub();
+    const { count, setCount } = useTagsGitHub();
+
     async function createNewTag() {
         try {
             await api.post("/tags/new", { name: newTag, auth_id: 1 })
+            setCount(count + 1)
+        } catch (error) {
+            console.log(error.response.data.detail)
+        }
+    }
+    async function deleteTag(repoID, tagID) {
+        try {
+            await api.delete(`/tags/${repoID}/${tagID}`, {
+                
+            })
             setCount(count + 1)
         } catch (error) {
             console.log(error.response.data.detail)
@@ -30,8 +41,6 @@ function Main() {
         }
         load()
     }, [count])
-
-    console.log(newTag)
 
     return (
         <>
@@ -57,10 +66,10 @@ function Main() {
                         {item.name}
                         {item.description === null ? "Não tem descrição" : item.description}
                         {item.html_url}
-                        <ModalButton tags = {tags} repo_id = {item.id}/>
+                        <ModalButton tags={tags} repo_id={item.id} />
                         <TagsContainer>
-                            {item.tags.map((data)=> (
-                                <button key={data.id}>{data.name}</button>
+                            {item.tags.map((data) => (
+                                <button onClick = {() => deleteTag(item.id, data.id) } key={data.id}>{data.name}  <Close style = {{marginLeft: 8}}/></button>
                             ))}
                         </TagsContainer>
                     </ContainerCard>
