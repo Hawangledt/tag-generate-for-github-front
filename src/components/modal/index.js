@@ -3,11 +3,13 @@ import { Modal } from "@material-ui/core"
 import { ContainerModal } from "./styles"
 import api from "../../services/api"
 import { useTagsGitHub } from "../../hooks"
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { toast } from "react-toastify"
 
 function ModalButton({ tags, repo_id }) {
     const [visible, setVisible] = useState(false);
     const [tagID, setTagID] = useState(0);
-    const {count, setCount} = useTagsGitHub();
+    const { count, setCount } = useTagsGitHub();
     async function linkTagToRepository() {
         try {
             await api.post("/tags/add", {
@@ -16,18 +18,28 @@ function ModalButton({ tags, repo_id }) {
             setCount(count + 1)
             setTagID(0)
             setVisible(false)
-            
+
         } catch (error) {
-            console.log(error.response.data.detail)
-        }
+            toast.error('🦄' + error.response.data.detail, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
+    }}
+    function closeModal() {
+        setVisible(!visible)
     }
-    
+
     return (
         <div>
-            <button onClick={() => setVisible(!visible)}>
-                Add a Tag
-            </button>
-            <Modal open={visible}>
+            <AddCircleIcon onClick={() => closeModal()} style={{
+                color: "#3f51b5", fontSize: 30, cursor: "pointer",
+            }} />
+            <Modal onClose={closeModal} open={visible}>
                 <ContainerModal>
                     <select value={tagID} onChange={(e) => setTagID(e.target.value)}>
                         <option value={0} disabled>
