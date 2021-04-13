@@ -17,8 +17,7 @@ function Main() {
 
     const { count, setCount } = useTagsGitHub();
 
-    const tagsInRepos = repos.map((item) => item.tags)
-    
+ 
     // const test = repos.filter((info, index) => info.tags.filter((item) => item.id > 2 ))
     function filteredRepos() {
         const filteredReposListTemp = [];
