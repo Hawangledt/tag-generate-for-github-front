@@ -10,9 +10,31 @@ import { Close } from "@material-ui/icons"
 
 function Main() {
     const [repos, setRepos] = useState([]);
+    const [filteredReposList, setFilteredReposList] = useState([]);
     const [tags, setTags] = useState([]);
     const [newTag, setNewTag] = useState("");
+    const [searchTag, setSearchTag] = useState("");
+
     const { count, setCount } = useTagsGitHub();
+
+    const tagsInRepos = repos.map((item) => item.tags)
+    
+    // const test = repos.filter((info, index) => info.tags.filter((item) => item.id > 2 ))
+    function filteredRepos() {
+        const filteredReposListTemp = [];
+        filteredReposListTemp.splice(0, filteredReposListTemp.length)
+        for (let index = 0; index < repos.length; index++) {
+            const tags = repos[index].tags;
+            for (let i = 0; i < tags.length; i++) {
+                const element = tags[i];
+                if (element.name.indexOf(searchTag) !== -1) {
+                    filteredReposListTemp.push(repos[index])
+                    break
+                }              
+            }
+        }
+        setFilteredReposList(filteredReposListTemp)
+    }
 
     async function createNewTag() {
         try {
@@ -42,6 +64,13 @@ function Main() {
         load()
     }, [count])
 
+    useEffect(() =>{
+        filteredRepos()
+    }, [repos, searchTag])
+
+    //filteredRepos()
+    // console.log(filteredReposList)
+
     return (
         <>
             <FormTags>
@@ -55,12 +84,14 @@ function Main() {
                 id="tags"
                 options={tags}
                 getOptionLabel={(option) => option.name}
+                onInputChange = {(e, value) => setSearchTag(value)}
                 renderInput={(params) => (
                     <TextField {...params} label="Search a tag" variant="outlined" />
+
                 )}
             />
             <ContainerMain>
-                {repos.map((item) => (
+                {filteredReposList.map((item) => (
                     <ContainerCard key={item.github_repo_id}>
                         {item.github_repo_id}
                         {item.name}
