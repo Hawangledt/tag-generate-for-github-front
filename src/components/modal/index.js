@@ -12,7 +12,7 @@ function ModalButton({ tags, repo_id }) {
     const { count, setCount } = useTagsGitHub();
     async function linkTagToRepository() {
         try {
-            await api.post("/tags/add", {
+            await api.post("/tags/repo", {
                 repo_id, tag_id: tagID
             })
             setCount(count + 1)

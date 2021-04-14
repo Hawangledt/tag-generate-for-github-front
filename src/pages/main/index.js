@@ -22,7 +22,7 @@ function Main() {
 
     async function createNewTag() {
         try {
-            await api.post("/tags/new", { name: newTag, auth_id: 1 })
+            await api.post("/tags/", { name: newTag })
             setCount(count + 1)
         } catch (error) {
             toast.error('🦄' + error.response.data.detail, {
@@ -57,7 +57,7 @@ function Main() {
     useEffect(() => {
         async function load() {
             const responseRepos = await api.get("/repos/");
-            const responseTags = await api.get("/tags/all/");
+            const responseTags = await api.get("/tags/");
             setRepos(responseRepos.data);
             setTags(responseTags.data);
         }
