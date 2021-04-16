@@ -9,7 +9,6 @@ import FinishSignUp from "../pages/finishSignup";
 function Private() {
     const { getAccessTokenSilently } = useAuth0()
     const [accessToken, setAccessToken] = useState("")
-    const [userVerify, setUserVerify] = useState(false)
     const history = useHistory()
 
     useEffect(() => {
@@ -21,7 +20,6 @@ function Private() {
                 setAccessToken(token)
                 await api.get("auth/",
                     { headers: { Authorization: (api.defaults.headers.Authorization = `Bearer ${token}`) } })
-                setUserVerify(true)
 
             } catch (error) {
                 history.push("/finish")
@@ -33,9 +31,6 @@ function Private() {
     return (
         <TagsGitHubProvider accessToken={accessToken}>
             <Switch>
-                {/* <Route path="/">
-                    <Redirect to="/main" />
-                </Route> */}
                 <Route path="/" exact component={Main} />
                 <Route path="/finish" exact component={FinishSignUp} />
             </Switch>

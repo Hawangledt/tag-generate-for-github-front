@@ -15,7 +15,7 @@ function FinishSignUp() {
         };
         try {
             await api.post('/auth/', formData);
-            history.push('/main');
+            history.push('/');
         } catch (error) {
             console.log(error);
         }
