@@ -2,11 +2,15 @@ import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
 import api from "../../services/api"
-import { ContainerCard, ContainerMain, FormTags, TagsContainer, TitleID, TitleName, TitleDescription } from "./styles"
+import {
+    Header, ContainerCard, ContainerMain, FormTags,
+    TagsContainer, TitleID, TitleName, TitleDescription
+} from "./styles"
 import ModalButton from "../../components/modal"
 import { useTagsGitHub } from "../../hooks";
 import { Close } from "@material-ui/icons"
 import { toast } from "react-toastify";
+import { useAuth0 } from "@auth0/auth0-react"
 
 
 function Main() {
@@ -15,10 +19,16 @@ function Main() {
     const [tags, setTags] = useState([]);
     const [newTag, setNewTag] = useState("");
     const [searchTag, setSearchTag] = useState("");
+    const { logout } = useAuth0();
 
-    const { count, setCount } = useTagsGitHub();
+    const { count, setCount, token } = useTagsGitHub();
     const typeRepo = filteredReposList.length === 0 ? repos : filteredReposList;
 
+    function handleLogout(){
+        logout({
+            returnTo: window.location.origin
+        })
+    }
 
     async function createNewTag() {
         try {
@@ -33,14 +43,12 @@ function Main() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                });
+            });
         }
     }
     async function deleteTag(repoID, tagID) {
         try {
-            await api.delete(`/tags/${repoID}/${tagID}`, {
-
-            })
+            await api.delete(`/tags/repo/${repoID}/${tagID}`)
             setCount(count + 1)
         } catch (error) {
             toast.error('🦄 ' + error.response.data.detail, {
@@ -51,10 +59,13 @@ function Main() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                });
+            });
         }
     }
     useEffect(() => {
+        if (token === "") {
+            return
+        }
         async function load() {
             const responseRepos = await api.get("/repos/");
             const responseTags = await api.get("/tags/");
@@ -62,7 +73,7 @@ function Main() {
             setTags(responseTags.data);
         }
         load()
-    }, [count])
+    }, [count, token])
 
     useEffect(() => {
         function filteredRepos() {
@@ -85,22 +96,31 @@ function Main() {
             else {
                 setFilteredReposList(filteredReposListTemp)
             }
-    
+
         }
         filteredRepos()
     }, [repos, searchTag])
 
     return (
         <>
-            <FormTags>
-                <h1>
-                    Create tags
-                </h1>
-                <TextField onChange={(e) => setNewTag(e.target.value)} label="Create a tag" variant="outlined" />
-                <button onClick={() => createNewTag()}>create</button>
-            </FormTags>
-            <Autocomplete 
-                style= {{margin: 40}}
+            <Header>
+                <div style={{ width: "25%" }}></div>
+                <div style={{ width: "50%" }}>
+                    <FormTags>
+                        <h1>
+                            Create tags
+                        </h1>
+                        <TextField onChange={(e) => setNewTag(e.target.value)} label="Create a tag" variant="outlined" />
+                        <button onClick={() => createNewTag()}>create</button>
+                    </FormTags>
+                </div>
+                <div style={{ width: "25%" }}>
+                    <button onClick = {()=>handleLogout()}>Logout</button>
+                </div>
+            </Header>
+
+            <Autocomplete
+                style={{ margin: 40 }}
                 id="tags"
                 options={tags}
                 getOptionLabel={(option) => option.name}

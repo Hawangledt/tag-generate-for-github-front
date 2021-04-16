@@ -1,18 +1,18 @@
 import React from "react";
-import { Switch, Route, BrowserRouter} from "react-router-dom";
-import Main from "../pages/main"
+import Public from "./public"
+import Private from "./private"
+import {useAuth0} from "@auth0/auth0-react"
 
 
 function Routes() {
+    
+    const {isAuthenticated, error} = useAuth0()
+    console.log(error)
+    if (isAuthenticated) {
+        return <Private/>
+    }
     return (
-        <BrowserRouter>
-            <Switch>
-                {/* <Route path="/">
-                    <Redirect to="/main" />
-                </Route> */}
-                <Route path="/" exact component={Main} />
-            </Switch>
-        </BrowserRouter>
+        <Public/>
     )
 };
 

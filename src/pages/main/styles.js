@@ -3,7 +3,7 @@ import styled from "styled-components"
 
 export const ContainerCard = styled.div`
     height: 300px;
-    width: 300px;
+    width: 350px;
     margin: 12px;
     display: flex;
     flex-direction: column;
@@ -116,3 +116,31 @@ export const TitleDescription = styled.h6`
     color: #777777;
     text-align: justify;
 `
+export const Header = styled.header`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 16px;
+    align-items: flex-start;
+    button{
+        margin: 8px;
+        border-radius: 5px;
+        background: #3f51b5;
+        color: #ffffff;
+        font-size: 16px;
+        padding: 9px;
+        border: 0px;
+        cursor: pointer;
+        transition: 0.2s;
+        &:hover{
+            opacity: 0.4;
+        };
+        &:active{
+            opacity: 1;
+        }
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+    }
+`;

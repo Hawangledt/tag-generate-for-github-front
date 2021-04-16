@@ -1,13 +1,12 @@
 import React from "react"
 import { ToastContainer } from "react-toastify";
-import { TagsGitHubProvider } from "./hooks";
 import Routes from "./routes";
 import 'react-toastify/dist/ReactToastify.css';
-
+import {BrowserRouter} from "react-router-dom"
 
 function App() {
   return (
-    <TagsGitHubProvider>
+    <BrowserRouter>
       <Routes />
       <ToastContainer
         position="top-right"
@@ -20,7 +19,7 @@ function App() {
         draggable
         pauseOnHover
       />
-    </TagsGitHubProvider>
+    </BrowserRouter>
   );
 }
 
